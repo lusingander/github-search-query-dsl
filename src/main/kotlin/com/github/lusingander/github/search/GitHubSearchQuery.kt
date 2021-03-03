@@ -27,7 +27,6 @@ class GitHubSearchQuery : Option() {
     fun stars(query: ValueQuery) = doInit(query, ::Stars)
     fun stars(range: IntRange) = doInit(range, ::Stars)
 
-    private fun <T : Option> doInit(s: String, f: (String) -> T): T = f(s).also { doInit(it) }
-    private fun <T : Option> doInit(q: ValueQuery, f: (ValueQuery) -> T): T = f(q).also { doInit(it) }
-    private fun <T : Option> doInit(r: IntRange, f: (Range) -> T): T = f(Range(r.first, r.last)).also { doInit(it) }
+    private fun <T : Option, U> doInit(v: U, f: (U) -> T): T = f(v).also { doInit(it) }
+    private fun <T : Option> doInit(r: IntRange, f: (Range) -> T): T = doInit(Range(r.first, r.last), f)
 }
