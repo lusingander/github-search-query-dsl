@@ -1,8 +1,7 @@
 package com.github.lusingander.github.search.option
 
-enum class InType(val label: String) {
-    NAME("name"),
-    DESCRIPTION("description"),
-    README("readme"),
-    ;
-}
+sealed class InType(val label: String)
+
+object Name : InType("name")
+object Description : InType("description")
+object Readme : InType("readme")
