@@ -15,15 +15,19 @@ fun query(init: GitHubSearchQuery.() -> Unit) = GitHubSearchQuery().apply(init)
 
 class GitHubSearchQuery : Option() {
 
-    fun word(word: String) = Word(word).also { doInit(it) }
-    fun user(name: String) = User(name).also { doInit(it) }
-    fun org(name: String) = Organization(name).also { doInit(it) }
-    fun size(query: ValueQuery) = Size(query).also { doInit(it) }
-    fun size(range: IntRange) = Size(Range(range.first, range.last)).also { doInit(it) }
-    fun followers(query: ValueQuery) = Followers(query).also { doInit(it) }
-    fun followers(range: IntRange) = Followers(Range(range.first, range.last)).also { doInit(it) }
-    fun forks(query: ValueQuery) = Forks(query).also { doInit(it) }
-    fun forks(range: IntRange) = Forks(Range(range.first, range.last)).also { doInit(it) }
-    fun stars(query: ValueQuery) = Stars(query).also { doInit(it) }
-    fun stars(range: IntRange) = Stars(Range(range.first, range.last)).also { doInit(it) }
+    fun word(word: String) = doInit(word, ::Word)
+    fun user(name: String) = doInit(name, ::User)
+    fun org(name: String) = doInit(name, ::Organization)
+    fun size(query: ValueQuery) = doInit(query, ::Size)
+    fun size(range: IntRange) = doInit(range, ::Size)
+    fun followers(query: ValueQuery) = doInit(query, ::Followers)
+    fun followers(range: IntRange) = doInit(range, ::Followers)
+    fun forks(query: ValueQuery) = doInit(query, ::Forks)
+    fun forks(range: IntRange) = doInit(range, ::Forks)
+    fun stars(query: ValueQuery) = doInit(query, ::Stars)
+    fun stars(range: IntRange) = doInit(range, ::Stars)
+
+    private fun <T : Option> doInit(s: String, f: (String) -> T): T = f(s).also { doInit(it) }
+    private fun <T : Option> doInit(q: ValueQuery, f: (ValueQuery) -> T): T = f(q).also { doInit(it) }
+    private fun <T : Option> doInit(r: IntRange, f: (Range) -> T): T = f(Range(r.first, r.last)).also { doInit(it) }
 }
