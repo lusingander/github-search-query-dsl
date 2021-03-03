@@ -1,28 +1,13 @@
 package com.github.lusingander.github.search
 
-@DslMarker
-private annotation class GitHubSearchQueryDslMarker
+import com.github.lusingander.github.search.option.Option
+import com.github.lusingander.github.search.option.Organization
+import com.github.lusingander.github.search.option.Word
 
 fun query(init: GitHubSearchQuery.() -> Unit) = GitHubSearchQuery().apply(init)
 
 class GitHubSearchQuery : Option() {
 
-    fun word(s: String) = Word(s).also { doInit(it) }
-}
-
-@GitHubSearchQueryDslMarker
-open class Option {
-
-    private val children = mutableListOf<Option>()
-
-    fun <T : Option> doInit(child: T, init: T.() -> Unit = {}) {
-        child.init()
-        children.add(child)
-    }
-
-    override fun toString() = children.joinToString(" ")
-}
-
-class Word(private val s: String) : Option() {
-    override fun toString() = s
+    fun word(word: String) = Word(word).also { doInit(it) }
+    fun org(name: String) = Organization(name).also { doInit(it) }
 }
