@@ -1,11 +1,5 @@
 package com.github.lusingander.github.search.option
 
-class Forks(private val query: ValueQuery) : Option() {
-
-    override fun toString(): String {
-        val b = StringBuilder()
-        b.append("forks:")
-        b.append(query)
-        return b.toString()
-    }
+class Forks(query: ValueQuery) : ValueQueryOption(query) {
+    override val tag: String = "forks"
 }
