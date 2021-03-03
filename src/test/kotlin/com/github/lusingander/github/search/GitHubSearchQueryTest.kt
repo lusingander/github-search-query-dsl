@@ -50,7 +50,7 @@ class GitHubSearchQueryTest : StringSpec({
         q.toString() shouldBe "foo org:bar"
     }
 
-    "size eq" {
+    "size equal" {
         val q = query {
             word("foo")
             size(EQ(100))
@@ -58,7 +58,7 @@ class GitHubSearchQueryTest : StringSpec({
         q.toString() shouldBe "foo size:100"
     }
 
-    "size lt" {
+    "size less than" {
         val q = query {
             word("foo")
             size(LT(100))
@@ -66,7 +66,7 @@ class GitHubSearchQueryTest : StringSpec({
         q.toString() shouldBe "foo size:<100"
     }
 
-    "size gt" {
+    "size greater than" {
         val q = query {
             word("foo")
             size(GT(100))
@@ -74,7 +74,7 @@ class GitHubSearchQueryTest : StringSpec({
         q.toString() shouldBe "foo size:>100"
     }
 
-    "size le" {
+    "size less than or equal to" {
         val q = query {
             word("foo")
             size(LE(100))
@@ -82,7 +82,7 @@ class GitHubSearchQueryTest : StringSpec({
         q.toString() shouldBe "foo size:<=100"
     }
 
-    "size ge" {
+    "size greater than or equal to" {
         val q = query {
             word("foo")
             size(GE(100))
@@ -104,5 +104,77 @@ class GitHubSearchQueryTest : StringSpec({
             size(100..200)
         }
         q.toString() shouldBe "foo size:100..200"
+    }
+
+    "followers less than" {
+        val q = query {
+            word("foo")
+            followers(LT(100))
+        }
+        q.toString() shouldBe "foo followers:<100"
+    }
+
+    "followers range" {
+        val q = query {
+            word("foo")
+            followers(Range(100, 200))
+        }
+        q.toString() shouldBe "foo followers:100..200"
+    }
+
+    "followers range using Kotlin Range" {
+        val q = query {
+            word("foo")
+            followers(100..200)
+        }
+        q.toString() shouldBe "foo followers:100..200"
+    }
+
+    "forks greater than" {
+        val q = query {
+            word("foo")
+            forks(GT(100))
+        }
+        q.toString() shouldBe "foo forks:>100"
+    }
+
+    "forks range" {
+        val q = query {
+            word("foo")
+            forks(Range(100, 200))
+        }
+        q.toString() shouldBe "foo forks:100..200"
+    }
+
+    "forks range using Kotlin Range" {
+        val q = query {
+            word("foo")
+            forks(100..200)
+        }
+        q.toString() shouldBe "foo forks:100..200"
+    }
+
+    "stars less than or equal to" {
+        val q = query {
+            word("foo")
+            stars(LE(100))
+        }
+        q.toString() shouldBe "foo stars:<=100"
+    }
+
+    "stars range" {
+        val q = query {
+            word("foo")
+            stars(Range(100, 200))
+        }
+        q.toString() shouldBe "foo stars:100..200"
+    }
+
+    "stars range using Kotlin Range" {
+        val q = query {
+            word("foo")
+            stars(100..200)
+        }
+        q.toString() shouldBe "foo stars:100..200"
     }
 })
