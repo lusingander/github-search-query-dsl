@@ -27,6 +27,14 @@ class GitHubSearchQueryTest : StringSpec({
         q.toString() shouldBe "foo in:name,description"
     }
 
+    "user" {
+        val q = query {
+            word("foo")
+            user("bar")
+        }
+        q.toString() shouldBe "foo user:bar"
+    }
+
     "organization" {
         val q = query {
             word("foo")
