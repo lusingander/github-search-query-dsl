@@ -310,4 +310,28 @@ class GitHubSearchQueryTest : StringSpec({
         }
         q.toString() shouldBe "foo topic:kotlin"
     }
+
+    "topics greater than or equal to" {
+        val q = query {
+            word("foo")
+            topics(GE(100))
+        }
+        q.toString() shouldBe "foo topics:>=100"
+    }
+
+    "topics range" {
+        val q = query {
+            word("foo")
+            topics(Range(100, 200))
+        }
+        q.toString() shouldBe "foo topics:100..200"
+    }
+
+    "topics range using Kotlin Range" {
+        val q = query {
+            word("foo")
+            topics(100..200)
+        }
+        q.toString() shouldBe "foo topics:100..200"
+    }
 })
