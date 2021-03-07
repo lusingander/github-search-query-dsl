@@ -302,4 +302,12 @@ class GitHubSearchQueryTest : StringSpec({
         }
         q.toString() shouldBe "foo pushed:2021-01-02T03:04:05+09:00..2022-01-02T03:04:05+09:00"
     }
+
+    "topic" {
+        val q = query {
+            word("foo")
+            topic("kotlin")
+        }
+        q.toString() shouldBe "foo topic:kotlin"
+    }
 })
