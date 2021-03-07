@@ -1,5 +1,6 @@
 package com.github.lusingander.github.search
 
+import com.github.lusingander.github.search.option.Created
 import com.github.lusingander.github.search.option.Followers
 import com.github.lusingander.github.search.option.Forks
 import com.github.lusingander.github.search.option.Option
@@ -26,6 +27,7 @@ class GitHubSearchQuery : Option() {
     fun forks(range: IntRange) = doInit(range, ::Forks)
     fun stars(query: ValueQuery) = doInit(query, ::Stars)
     fun stars(range: IntRange) = doInit(range, ::Stars)
+    fun created(query: ValueQuery) = doInit(query, ::Created)
 
     private fun <T : Option, U> doInit(v: U, f: (U) -> T): T = f(v).also { doInit(it) }
     private fun <T : Option> doInit(r: IntRange, f: (Range) -> T): T = doInit(Range(r.first, r.last), f)

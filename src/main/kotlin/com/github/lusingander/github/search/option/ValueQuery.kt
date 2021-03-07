@@ -1,27 +1,82 @@
 package com.github.lusingander.github.search.option
 
-sealed class ValueQuery
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
-data class EQ(val value: Int) : ValueQuery() {
-    override fun toString() = "$value"
+private val FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+sealed class ValueQuery(private val value: ValueQueryParam) {
+    abstract val query: String
+    override fun toString() = value.toString(query)
 }
 
-data class LT(val value: Int) : ValueQuery() {
-    override fun toString() = "<$value"
+private interface ValueQueryParam {
+    fun toString(query: String): String
 }
 
-data class GT(val value: Int) : ValueQuery() {
-    override fun toString() = ">$value"
+private data class IntValueQueryParam(private val value: Int) : ValueQueryParam {
+    override fun toString(query: String): String = "$query$value"
 }
 
-data class LE(val value: Int) : ValueQuery() {
-    override fun toString() = "<=$value"
+private data class LocalDateValueQueryParam(private val value: LocalDate) : ValueQueryParam {
+    private val fv = value.format(FORMATTER)
+    override fun toString(query: String): String = "$query$fv"
 }
 
-data class GE(val value: Int) : ValueQuery() {
-    override fun toString() = ">=$value"
+private data class DoubleIntValueQueryParam(
+    private val v1: Int,
+    private val v2: Int
+) : ValueQueryParam {
+    override fun toString(query: String): String = "$v1$query$v2"
 }
 
-data class Range(val min: Int, val max: Int) : ValueQuery() {
-    override fun toString() = "$min..$max"
+private data class DoubleLocalDateValueQueryParam(
+    private val v1: LocalDate,
+    private val v2: LocalDate
+) : ValueQueryParam {
+    private val fv1 = v1.format(FORMATTER)
+    private val fv2 = v2.format(FORMATTER)
+    override fun toString(query: String): String = "$fv1$query$fv2"
+}
+
+class EQ : ValueQuery {
+    constructor(value: Int) : super(IntValueQueryParam(value))
+    constructor(value: LocalDate) : super(LocalDateValueQueryParam(value))
+
+    override val query = ""
+}
+
+class LT : ValueQuery {
+    constructor(value: Int) : super(IntValueQueryParam(value))
+    constructor(value: LocalDate) : super(LocalDateValueQueryParam(value))
+
+    override val query = "<"
+}
+
+class GT : ValueQuery {
+    constructor(value: Int) : super(IntValueQueryParam(value))
+    constructor(value: LocalDate) : super(LocalDateValueQueryParam(value))
+
+    override val query = ">"
+}
+
+class LE : ValueQuery {
+    constructor(value: Int) : super(IntValueQueryParam(value))
+    constructor(value: LocalDate) : super(LocalDateValueQueryParam(value))
+
+    override val query = "<="
+}
+
+class GE : ValueQuery {
+    constructor(value: Int) : super(IntValueQueryParam(value))
+    constructor(value: LocalDate) : super(LocalDateValueQueryParam(value))
+
+    override val query = ">="
+}
+
+class Range : ValueQuery {
+    constructor(min: Int, max: Int) : super(DoubleIntValueQueryParam(min, max))
+    constructor(min: LocalDate, max: LocalDate) : super(DoubleLocalDateValueQueryParam(min, max))
+
+    override val query = ".."
 }
