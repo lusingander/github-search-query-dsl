@@ -5,6 +5,7 @@ import com.github.lusingander.github.search.option.Followers
 import com.github.lusingander.github.search.option.Forks
 import com.github.lusingander.github.search.option.Option
 import com.github.lusingander.github.search.option.Organization
+import com.github.lusingander.github.search.option.Pushed
 import com.github.lusingander.github.search.option.Range
 import com.github.lusingander.github.search.option.Size
 import com.github.lusingander.github.search.option.Stars
@@ -28,6 +29,7 @@ class GitHubSearchQuery : Option() {
     fun stars(query: ValueQuery) = doInit(query, ::Stars)
     fun stars(range: IntRange) = doInit(range, ::Stars)
     fun created(query: ValueQuery) = doInit(query, ::Created)
+    fun pushed(query: ValueQuery) = doInit(query, ::Pushed)
 
     private fun <T : Option, U> doInit(v: U, f: (U) -> T): T = f(v).also { doInit(it) }
     private fun <T : Option> doInit(r: IntRange, f: (Range) -> T): T = doInit(Range(r.first, r.last), f)

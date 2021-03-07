@@ -281,4 +281,25 @@ class GitHubSearchQueryTest : StringSpec({
         }
         q.toString() shouldBe "foo created:2021-01-02T03:04:05+09:00..2022-01-02T03:04:05+09:00"
     }
+
+    "pushed (local date) equal" {
+        val q = query {
+            word("foo")
+            pushed(EQ(LocalDate.of(2021, 1, 2)))
+        }
+        q.toString() shouldBe "foo pushed:2021-01-02"
+    }
+
+    "pushed (offset datetime) range" {
+        val q = query {
+            word("foo")
+            pushed(
+                Range(
+                    OffsetDateTime.of(2021, 1, 2, 3, 4, 5, 0, ZoneOffset.ofHours(9)),
+                    OffsetDateTime.of(2022, 1, 2, 3, 4, 5, 0, ZoneOffset.ofHours(9))
+                )
+            )
+        }
+        q.toString() shouldBe "foo pushed:2021-01-02T03:04:05+09:00..2022-01-02T03:04:05+09:00"
+    }
 })
