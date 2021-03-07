@@ -3,6 +3,8 @@ package com.github.lusingander.github.search
 import com.github.lusingander.github.search.option.Created
 import com.github.lusingander.github.search.option.Followers
 import com.github.lusingander.github.search.option.Forks
+import com.github.lusingander.github.search.option.License
+import com.github.lusingander.github.search.option.Licenses
 import com.github.lusingander.github.search.option.Option
 import com.github.lusingander.github.search.option.Organization
 import com.github.lusingander.github.search.option.Pushed
@@ -35,6 +37,7 @@ class GitHubSearchQuery : Option() {
     fun topic(name: String) = doInit(name, ::Topic)
     fun topics(query: ValueQuery) = doInit(query, ::Topics)
     fun topics(range: IntRange) = doInit(range, ::Topics)
+    fun license(license: Licenses) = doInit(license, ::License)
 
     private fun <T : Option, U> doInit(v: U, f: (U) -> T): T = f(v).also { doInit(it) }
     private fun <T : Option> doInit(r: IntRange, f: (Range) -> T): T = doInit(Range(r.first, r.last), f)

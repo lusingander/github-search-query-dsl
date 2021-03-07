@@ -6,6 +6,7 @@ import com.github.lusingander.github.search.option.GE
 import com.github.lusingander.github.search.option.GT
 import com.github.lusingander.github.search.option.LE
 import com.github.lusingander.github.search.option.LT
+import com.github.lusingander.github.search.option.Licenses
 import com.github.lusingander.github.search.option.Name
 import com.github.lusingander.github.search.option.Range
 import io.kotest.core.spec.style.StringSpec
@@ -333,5 +334,12 @@ class GitHubSearchQueryTest : StringSpec({
             topics(100..200)
         }
         q.toString() shouldBe "foo topics:100..200"
+    }
+
+    "license" {
+        val q = query {
+            license(Licenses.APACHE_LICENSE_2_0)
+        }
+        q.toString() shouldBe "license:apache-2.0"
     }
 })
