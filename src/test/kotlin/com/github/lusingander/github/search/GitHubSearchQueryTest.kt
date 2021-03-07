@@ -11,6 +11,8 @@ import com.github.lusingander.github.search.option.Range
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import java.time.LocalDate
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 
 class GitHubSearchQueryTest : StringSpec({
 
@@ -179,7 +181,7 @@ class GitHubSearchQueryTest : StringSpec({
         q.toString() shouldBe "foo stars:100..200"
     }
 
-    "created equal" {
+    "created (local date) equal" {
         val q = query {
             word("foo")
             created(EQ(LocalDate.of(2021, 1, 2)))
@@ -187,7 +189,7 @@ class GitHubSearchQueryTest : StringSpec({
         q.toString() shouldBe "foo created:2021-01-02"
     }
 
-    "created less than" {
+    "created (local date) less than" {
         val q = query {
             word("foo")
             created(LT(LocalDate.of(2021, 1, 2)))
@@ -195,7 +197,7 @@ class GitHubSearchQueryTest : StringSpec({
         q.toString() shouldBe "foo created:<2021-01-02"
     }
 
-    "created greater than" {
+    "created (local date) greater than" {
         val q = query {
             word("foo")
             created(GT(LocalDate.of(2021, 10, 20)))
@@ -203,7 +205,7 @@ class GitHubSearchQueryTest : StringSpec({
         q.toString() shouldBe "foo created:>2021-10-20"
     }
 
-    "created less than or equal to" {
+    "created (local date) less than or equal to" {
         val q = query {
             word("foo")
             created(LE(LocalDate.of(2021, 10, 20)))
@@ -211,7 +213,7 @@ class GitHubSearchQueryTest : StringSpec({
         q.toString() shouldBe "foo created:<=2021-10-20"
     }
 
-    "created greater than or equal to" {
+    "created (local date) greater than or equal to" {
         val q = query {
             word("foo")
             created(GE(LocalDate.of(2021, 1, 2)))
@@ -219,11 +221,64 @@ class GitHubSearchQueryTest : StringSpec({
         q.toString() shouldBe "foo created:>=2021-01-02"
     }
 
-    "created range" {
+    "created (local date) range" {
         val q = query {
             word("foo")
             created(Range(LocalDate.of(2021, 1, 2), LocalDate.of(2022, 1, 2)))
         }
         q.toString() shouldBe "foo created:2021-01-02..2022-01-02"
+    }
+
+    "created (offset datetime) equal" {
+        val q = query {
+            word("foo")
+            created(EQ(OffsetDateTime.of(2021, 1, 2, 3, 4, 5, 0, ZoneOffset.ofHours(9))))
+        }
+        q.toString() shouldBe "foo created:2021-01-02T03:04:05+09:00"
+    }
+
+    "created (offset datetime) less than" {
+        val q = query {
+            word("foo")
+            created(LT(OffsetDateTime.of(2021, 1, 2, 3, 4, 5, 0, ZoneOffset.ofHours(-9))))
+        }
+        q.toString() shouldBe "foo created:<2021-01-02T03:04:05-09:00"
+    }
+
+    "created (offset datetime) greater than" {
+        val q = query {
+            word("foo")
+            created(GT(OffsetDateTime.of(2021, 1, 2, 13, 14, 15, 0, ZoneOffset.ofHours(15))))
+        }
+        q.toString() shouldBe "foo created:>2021-01-02T13:14:15+15:00"
+    }
+
+    "created (offset datetime) less than or equal to" {
+        val q = query {
+            word("foo")
+            created(LE(OffsetDateTime.of(2021, 1, 2, 13, 14, 15, 0, ZoneOffset.ofHours(-15))))
+        }
+        q.toString() shouldBe "foo created:<=2021-01-02T13:14:15-15:00"
+    }
+
+    "created (offset datetime) greater than or equal to" {
+        val q = query {
+            word("foo")
+            created(GE(OffsetDateTime.of(2021, 1, 2, 3, 4, 5, 0, ZoneOffset.UTC)))
+        }
+        q.toString() shouldBe "foo created:>=2021-01-02T03:04:05Z"
+    }
+
+    "created (offset datetime) range" {
+        val q = query {
+            word("foo")
+            created(
+                Range(
+                    OffsetDateTime.of(2021, 1, 2, 3, 4, 5, 0, ZoneOffset.ofHours(9)),
+                    OffsetDateTime.of(2022, 1, 2, 3, 4, 5, 0, ZoneOffset.ofHours(9))
+                )
+            )
+        }
+        q.toString() shouldBe "foo created:2021-01-02T03:04:05+09:00..2022-01-02T03:04:05+09:00"
     }
 })

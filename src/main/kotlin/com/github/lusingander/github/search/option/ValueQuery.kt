@@ -1,9 +1,11 @@
 package com.github.lusingander.github.search.option
 
 import java.time.LocalDate
+import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
-private val FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+private val LOCAL_DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE
+private val OFFSET_DATETIME_FORMATTER = DateTimeFormatter.ISO_OFFSET_DATE_TIME
 
 sealed class ValueQuery(private val value: ValueQueryParam) {
     abstract val query: String
@@ -19,7 +21,12 @@ private data class IntValueQueryParam(private val value: Int) : ValueQueryParam 
 }
 
 private data class LocalDateValueQueryParam(private val value: LocalDate) : ValueQueryParam {
-    private val fv = value.format(FORMATTER)
+    private val fv = value.format(LOCAL_DATE_FORMATTER)
+    override fun toString(query: String): String = "$query$fv"
+}
+
+private data class OffsetDateTimeValueQueryParam(private val value: OffsetDateTime) : ValueQueryParam {
+    private val fv = value.format(OFFSET_DATETIME_FORMATTER)
     override fun toString(query: String): String = "$query$fv"
 }
 
@@ -34,14 +41,24 @@ private data class DoubleLocalDateValueQueryParam(
     private val v1: LocalDate,
     private val v2: LocalDate
 ) : ValueQueryParam {
-    private val fv1 = v1.format(FORMATTER)
-    private val fv2 = v2.format(FORMATTER)
+    private val fv1 = v1.format(LOCAL_DATE_FORMATTER)
+    private val fv2 = v2.format(LOCAL_DATE_FORMATTER)
+    override fun toString(query: String): String = "$fv1$query$fv2"
+}
+
+private data class DoubleOffsetDateTimeValueQueryParam(
+    private val v1: OffsetDateTime,
+    private val v2: OffsetDateTime
+) : ValueQueryParam {
+    private val fv1 = v1.format(OFFSET_DATETIME_FORMATTER)
+    private val fv2 = v2.format(OFFSET_DATETIME_FORMATTER)
     override fun toString(query: String): String = "$fv1$query$fv2"
 }
 
 class EQ : ValueQuery {
     constructor(value: Int) : super(IntValueQueryParam(value))
     constructor(value: LocalDate) : super(LocalDateValueQueryParam(value))
+    constructor(value: OffsetDateTime) : super(OffsetDateTimeValueQueryParam(value))
 
     override val query = ""
 }
@@ -49,6 +66,7 @@ class EQ : ValueQuery {
 class LT : ValueQuery {
     constructor(value: Int) : super(IntValueQueryParam(value))
     constructor(value: LocalDate) : super(LocalDateValueQueryParam(value))
+    constructor(value: OffsetDateTime) : super(OffsetDateTimeValueQueryParam(value))
 
     override val query = "<"
 }
@@ -56,6 +74,7 @@ class LT : ValueQuery {
 class GT : ValueQuery {
     constructor(value: Int) : super(IntValueQueryParam(value))
     constructor(value: LocalDate) : super(LocalDateValueQueryParam(value))
+    constructor(value: OffsetDateTime) : super(OffsetDateTimeValueQueryParam(value))
 
     override val query = ">"
 }
@@ -63,6 +82,7 @@ class GT : ValueQuery {
 class LE : ValueQuery {
     constructor(value: Int) : super(IntValueQueryParam(value))
     constructor(value: LocalDate) : super(LocalDateValueQueryParam(value))
+    constructor(value: OffsetDateTime) : super(OffsetDateTimeValueQueryParam(value))
 
     override val query = "<="
 }
@@ -70,6 +90,7 @@ class LE : ValueQuery {
 class GE : ValueQuery {
     constructor(value: Int) : super(IntValueQueryParam(value))
     constructor(value: LocalDate) : super(LocalDateValueQueryParam(value))
+    constructor(value: OffsetDateTime) : super(OffsetDateTimeValueQueryParam(value))
 
     override val query = ">="
 }
@@ -77,6 +98,7 @@ class GE : ValueQuery {
 class Range : ValueQuery {
     constructor(min: Int, max: Int) : super(DoubleIntValueQueryParam(min, max))
     constructor(min: LocalDate, max: LocalDate) : super(DoubleLocalDateValueQueryParam(min, max))
+    constructor(min: OffsetDateTime, max: OffsetDateTime) : super(DoubleOffsetDateTimeValueQueryParam(min, max))
 
     override val query = ".."
 }
